@@ -1,6 +1,10 @@
 # Slate EV Truck API Documentation
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/projects/cool-baklava-79da84/deploys)
+
 Welcome to the official documentation for the Slate EV Truck API. This API provides information about the Slate EV truck, including specifications, features, and other relevant details.
+
+**Live Documentation URL**: [https://cool-baklava-79da84.netlify.app/](https://cool-baklava-79da84.netlify.app/)
 
 ## About the API
 

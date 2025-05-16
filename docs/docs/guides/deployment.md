@@ -2,6 +2,15 @@
 
 This guide explains how to deploy the Slate EV Truck API to various hosting platforms.
 
+## Current Deployments
+
+### Documentation Site
+
+The documentation for this project is currently deployed on Netlify:
+
+- **Live URL**: [https://cool-baklava-79da84.netlify.app/](https://cool-baklava-79da84.netlify.app/)
+- **Deploy Status**: [![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/projects/cool-baklava-79da84/deploys)
+
 ## Deployment Options
 
 Here are the top options for deploying your FastAPI application, ordered by ease of use:

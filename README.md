@@ -2,6 +2,14 @@
 
 A FastAPI-based REST API that provides information about the Slate EV truck, including specifications, features, and other relevant details. The API includes Swagger UI documentation for easy testing and exploration.
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/projects/cool-baklava-79da84/deploys)
+
+## Documentation
+
+**[View the full documentation](https://cool-baklava-79da84.netlify.app/)**
+
+The complete documentation for this API is available at [https://cool-baklava-79da84.netlify.app/](https://cool-baklava-79da84.netlify.app/)
+
 ## Features
 
 - RESTful API endpoints for truck specifications and features

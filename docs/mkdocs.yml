@@ -1,6 +1,7 @@
 site_name: Slate EV Truck API
 site_description: Documentation for the Slate EV Truck API
 site_author: Slate EV Team
+site_url: https://cool-baklava-79da84.netlify.app/
 
 # Repository
 repo_name: slate-ev-fan-api
