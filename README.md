@@ -9,10 +9,13 @@ A FastAPI-based REST API that provides information about the Slate EV truck, inc
 - Data validation using Pydantic models
 - Category-based feature filtering
 - Detailed error handling
+- SQLite database for data persistence
+- CSV data import functionality
+- Environment variable configuration
 
 ## Prerequisites
 
-- Python 3.11 or later
+- Python 3.11 (required - other versions may have compatibility issues)
 - pip (Python package installer)
 - Virtual environment (recommended)
 
@@ -22,7 +25,7 @@ A FastAPI-based REST API that provides information about the Slate EV truck, inc
 
 ```bash
 git clone <repository-url>
-cd api-test-01
+cd slate-ev-fan-api
 ```
 
 2. Create a virtual environment:
@@ -38,7 +41,13 @@ source venv/bin/activate  # On Windows, use: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. Run the API:
+4. Create a `.env` file in the project root (optional):
+
+```bash
+cp .env.example .env  # If .env.example exists
+```
+
+5. Run the API:
 
 ```bash
 uvicorn main:app --reload
@@ -62,25 +71,12 @@ API documentation (Swagger UI) will be available at `http://localhost:8000/docs`
 }
 ```
 
-### 2. Truck Specifications
+### 2. Vehicle Information
 
-- **URL**: `/specs`
+- **URL**: `/vehicles`
 - **Method**: GET
-- **Description**: Get detailed specifications of the Slate EV truck
-- **Response**:
-
-```json
-{
-  "model": "Slate EV Truck",
-  "battery_capacity": "150 kWh",
-  "range": "300 miles",
-  "horsepower": 500,
-  "torque": 600,
-  "payload_capacity": "2,000 lbs",
-  "towing_capacity": "10,000 lbs",
-  "price": "Starting at $45,000"
-}
-```
+- **Description**: Get all vehicle information
+- **Response**: Array of vehicle objects with specifications and features
 
 ### 3. Features List
 
@@ -91,17 +87,6 @@ API documentation (Swagger UI) will be available at `http://localhost:8000/docs`
   - `category` (optional): Filter features by category (e.g., "Safety", "Technology", "Charging")
 - **Response**: Array of features
 
-```json
-[
-  {
-    "name": "Advanced Driver Assistance",
-    "description": "Includes adaptive cruise control, lane keeping assist, and automatic emergency braking",
-    "category": "Safety"
-  }
-  // ... more features
-]
-```
-
 ### 4. Specific Feature
 
 - **URL**: `/features/{feature_name}`
@@ -111,79 +96,56 @@ API documentation (Swagger UI) will be available at `http://localhost:8000/docs`
   - `feature_name`: Name of the feature to retrieve
 - **Response**: Feature details
 
-```json
-{
-  "name": "Advanced Driver Assistance",
-  "description": "Includes adaptive cruise control, lane keeping assist, and automatic emergency braking",
-  "category": "Safety"
-}
-```
-
-## Testing the API
-
-### Using Swagger UI (Recommended)
-
-1. Open `http://localhost:8000/docs` in your browser
-2. Click on any endpoint you want to test
-3. Click the "Try it out" button
-4. Fill in any required parameters
-5. Click "Execute" to make the request
-6. View the response in the browser
-
-### Using curl
-
-1. Test the root endpoint:
-
-```bash
-curl http://localhost:8000/
-```
-
-2. Get truck specifications:
-
-```bash
-curl http://localhost:8000/specs
-```
-
-3. Get all features:
-
-```bash
-curl http://localhost:8000/features
-```
-
-4. Get features by category:
-
-```bash
-curl http://localhost:8000/features?category=Safety
-```
-
-5. Get a specific feature:
-
-```bash
-curl http://localhost:8000/features/Advanced%20Driver%20Assistance
-```
-
-## Error Handling
-
-The API includes proper error handling for common scenarios:
-
-- 404 Not Found: When a requested feature or category doesn't exist
-- 422 Unprocessable Entity: When request parameters are invalid
-- 500 Internal Server Error: For unexpected server errors
-
 ## Project Structure
 
 ```
-api-test-01/
-├── main.py           # Main FastAPI application
-├── requirements.txt  # Project dependencies
-└── README.md        # Project documentation
+slate-ev-fan-api/
+├── app/
+│   ├── api/
+│   │   └── endpoints.py    # API route definitions
+│   ├── models/
+│   │   └── models.py      # Pydantic models
+│   ├── services/
+│   │   └── csv_import.py  # CSV data import service
+│   └── database.py        # Database configuration
+├── data/
+│   └── slate.csv         # Vehicle specifications data
+├── main.py               # Main FastAPI application
+├── requirements.txt      # Project dependencies
+├── .env.example         # Example environment variables
+├── .gitignore          # Git ignore rules
+└── README.md           # Project documentation
 ```
+
+## Data Management
+
+The project uses SQLite for data storage and includes functionality to import data from CSV files. The data directory contains the source CSV file with vehicle specifications.
 
 ## Dependencies
 
-- FastAPI 0.88.0: Web framework for building APIs
-- Uvicorn 0.20.0: ASGI server for running the API
-- Pydantic 1.10.2: Data validation and settings management
+- FastAPI: Web framework for building APIs
+- Uvicorn: ASGI server for running the API
+- Pydantic: Data validation and settings management
+- SQLAlchemy: SQL toolkit and ORM
+- python-dotenv: Environment variable management
+
+## Development
+
+### Environment Variables
+
+Create a `.env` file in the project root with the following variables (if needed):
+
+```env
+DATABASE_URL=sqlite:///./slate.db
+```
+
+### Database
+
+The application uses SQLite as its database. The database file is created automatically on first run and is stored in the project root directory.
+
+### Data Import
+
+The application automatically imports data from the CSV file on startup. The CSV file should be placed in the `data/` directory.
 
 ## Contributing
 
