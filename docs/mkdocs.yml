@@ -68,7 +68,11 @@ nav:
 # Plugins
 plugins:
   - search
+  - autorefs
   - mkdocstrings:
+      default_handler: python
       handlers:
         python:
           paths: [..]
+          options:
+            show_source: true
