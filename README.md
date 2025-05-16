@@ -153,6 +153,117 @@ The application uses SQLite as its database. The database file is created automa
 
 The application automatically imports data from the CSV file on startup. The CSV file should be placed in the `data/` directory.
 
+## Deployment
+
+Here are the top 4 options for deploying your FastAPI application, ordered by ease of use and free tier availability:
+
+### 1. Railway.app (Recommended - Easiest)
+
+[Railway.app](https://railway.app/) offers the simplest deployment process with a generous free tier:
+
+1. Go to [Railway.app](https://railway.app/) and sign up with GitHub
+2. Click "New Project" → "Deploy from GitHub repo"
+3. Select your repository
+4. Add environment variables:
+   ```
+   DATABASE_URL=sqlite:///./slate.db
+   ENVIRONMENT=production
+   ```
+
+### 2. Render.com
+
+[Render](https://render.com/) provides a simple deployment process with a free tier:
+
+1. Sign up at [Render.com](https://render.com/)
+2. Connect your GitHub repository
+3. Create a new Web Service
+4. Configure:
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+   - Environment Variables:
+     ```
+     DATABASE_URL=sqlite:///./slate.db
+     ENVIRONMENT=production
+     ```
+
+### 3. PythonAnywhere
+
+[PythonAnywhere](https://www.pythonanywhere.com/) is great for Python applications:
+
+1. Sign up for a free account
+2. Go to Web tab and create a new web app
+3. Choose "FastAPI" as your framework
+4. Upload your code or clone from GitHub
+5. Configure your virtual environment and requirements
+
+### 4. Fly.io
+
+[Fly.io](https://fly.io/) offers a generous free tier with global deployment:
+
+1. Install Fly CLI:
+   ```bash
+   curl -L https://fly.io/install.sh | sh
+   ```
+2. Sign up and login:
+   ```bash
+   fly auth signup
+   fly auth login
+   ```
+3. Create a `fly.toml`:
+   ```bash
+   fly launch
+   ```
+4. Deploy:
+   ```bash
+   fly deploy
+   ```
+
+### Production Checklist
+
+Before deploying, ensure you:
+
+1. Set up environment variables:
+
+   - `DATABASE_URL`
+   - `ENVIRONMENT=production`
+
+2. Security considerations:
+
+   - Enable CORS if needed
+   - Set up proper authentication
+   - Use HTTPS
+   - Configure rate limiting
+
+3. Monitoring setup:
+
+   - Application logs
+   - Error tracking
+   - Performance monitoring
+
+4. Database considerations:
+   - Backup strategy
+   - Data persistence
+   - Connection pooling
+
+### Troubleshooting Common Issues
+
+1. **Application Not Starting**
+
+   - Check environment variables
+   - Verify database connection
+   - Review application logs
+
+2. **Database Issues**
+
+   - Ensure database URL is correct
+   - Check database permissions
+   - Verify data import process
+
+3. **Deployment Failures**
+   - Check build logs
+   - Verify requirements.txt
+   - Ensure proper Python version
+
 ## Contributing
 
 1. Fork the repository
