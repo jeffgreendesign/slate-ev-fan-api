@@ -1,9 +1,30 @@
+# Development Environment
+.env
+.env.*
+ENV/
+env/
+venv/
+
+# IDE and Editor
+.idea/
+.ipynb_checkpoints
+.vscode/
+*.swo
+*.swp
+
+# OS Generated
+.DS_Store
+Thumbs.db
+
 # Python
-__pycache__/
+*.egg
+*.egg-info/
 *.py[cod]
-*$py.class
 *.so
+*$py.class
 .Python
+__pycache__/
+.installed.cfg
 build/
 develop-eggs/
 dist/
@@ -16,21 +37,37 @@ parts/
 sdist/
 var/
 wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 
-# Virtual Environment
-venv/
-ENV/
-env/
+# Data and Database
+*.csv
+*.db
+*.json
+*.sqlite
+*.sqlite3
+data/
+db.sqlite3
+db.sqlite3-journal
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
+# Logs
+*.log
+logs/
 
-# OS
-.DS_Store
-Thumbs.db 
+# Testing and Coverage
+.cache
+.coverage
+.coverage.*
+.hypothesis/
+htmlcov/
+nosetests.xml
+pytest_cache/
+.tox/
+coverage.xml
+*.cover
+
+# Type Checking
+.dmypy.json
+dmypy.json
+.mypy_cache/
+
+# Local Settings
+local_settings.py 
