@@ -44,7 +44,7 @@ wheels/
 *.json
 *.sqlite
 *.sqlite3
-data/
+# data/
 db.sqlite3
 db.sqlite3-journal
 
