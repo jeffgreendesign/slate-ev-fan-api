@@ -109,7 +109,7 @@ slate-ev-fan-api/
 │   │   └── csv_import.py  # CSV data import service
 │   └── database.py        # Database configuration
 ├── data/
-│   └── slate.csv         # Vehicle specifications data
+│   └── slate.csv         # Vehicle specifications data (version controlled)
 ├── main.py               # Main FastAPI application
 ├── requirements.txt      # Project dependencies
 ├── .env.example         # Example environment variables
@@ -120,6 +120,12 @@ slate-ev-fan-api/
 ## Data Management
 
 The project uses SQLite for data storage and includes functionality to import data from CSV files. The data directory contains the source CSV file with vehicle specifications.
+
+### Version Control
+
+- `data/slate.csv` is included in version control
+- Other data files and database files are ignored
+- See `.gitignore` for details on which files are tracked
 
 ## Dependencies
 

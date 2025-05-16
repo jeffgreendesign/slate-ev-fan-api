@@ -39,12 +39,13 @@ var/
 wheels/
 
 # Data and Database
+# Ignore all CSV files except slate.csv
 *.csv
+!data/slate.csv
 *.db
 *.json
 *.sqlite
 *.sqlite3
-# data/
 db.sqlite3
 db.sqlite3-journal
 
