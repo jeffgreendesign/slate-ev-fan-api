@@ -2,7 +2,7 @@
 
 A FastAPI-based REST API that provides information about the Slate EV truck, including specifications, features, and other relevant details. The API includes Swagger UI documentation for easy testing and exploration.
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/projects/cool-baklava-79da84/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/sites/cool-baklava-79da84/deploys)
 
 ## Documentation
 
@@ -70,23 +70,10 @@ API documentation (Swagger UI) will be available at `http://localhost:8000/docs`
 
 - **URL**: `/`
 - **Method**: GET
-- **Description**: Welcome message
-- **Response**:
+- **Description**: Get the main vehicle information
+- **Response**: Vehicle object with specifications and features
 
-```json
-{
-  "message": "Welcome to the Slate EV Truck API"
-}
-```
-
-### 2. Vehicle Information
-
-- **URL**: `/vehicles`
-- **Method**: GET
-- **Description**: Get all vehicle information
-- **Response**: Array of vehicle objects with specifications and features
-
-### 3. Features List
+### 2. Features List
 
 - **URL**: `/features`
 - **Method**: GET
@@ -95,7 +82,7 @@ API documentation (Swagger UI) will be available at `http://localhost:8000/docs`
   - `category` (optional): Filter features by category (e.g., "Safety", "Technology", "Charging")
 - **Response**: Array of features
 
-### 4. Specific Feature
+### 3. Specific Feature
 
 - **URL**: `/features/{feature_name}`
 - **Method**: GET
@@ -112,28 +99,38 @@ slate-ev-fan-api/
 │   ├── api/
 │   │   └── endpoints.py    # API route definitions
 │   ├── models/
-│   │   └── models.py      # Pydantic models
+│   │   └── vehicle.py      # SQLAlchemy ORM models
+│   ├── schemas/
+│   │   └── vehicle.py      # Pydantic schemas
 │   ├── services/
-│   │   └── csv_import.py  # CSV data import service
-│   └── database.py        # Database configuration
+│   │   └── csv_import.py   # CSV data import service
+│   └── db/
+│       └── session.py      # Database configuration
 ├── data/
-│   └── slate.csv         # Vehicle specifications data (version controlled)
-├── main.py               # Main FastAPI application
-├── requirements.txt      # Project dependencies
-├── .env.example         # Example environment variables
-├── .gitignore          # Git ignore rules
-└── README.md           # Project documentation
+│   └── slate.csv          # Vehicle specifications data
+├── docs/                  # Documentation site
+│   ├── docs/              # Markdown documentation files
+│   ├── mkdocs.yml         # MkDocs configuration
+│   ├── netlify.toml       # Netlify configuration
+│   └── requirements.txt   # Documentation dependencies
+├── main.py                # Main FastAPI application
+└── requirements.txt       # Project dependencies
 ```
 
-## Data Management
+## Data Models
 
-The project uses SQLite for data storage and includes functionality to import data from CSV files. The data directory contains the source CSV file with vehicle specifications.
+The API uses SQLAlchemy ORM models for database interaction and Pydantic schemas for request/response validation. Key models include:
 
-### Version Control
+- Vehicle: Main vehicle information
+- Dimensions: Vehicle dimensions
+- Performance: Performance specifications
+- Powertrain: Motor and drivetrain details
+- Battery: Battery specifications
+- Charging: Charging capabilities
+- Feature: Vehicle features
+- Pricing: Pricing information
 
-- `data/slate.csv` is included in version control
-- Other data files and database files are ignored
-- See `.gitignore` for details on which files are tracked
+For detailed model information, see the [API Models Documentation](https://cool-baklava-79da84.netlify.app/api/models/).
 
 ## Dependencies
 
@@ -165,7 +162,7 @@ The application automatically imports data from the CSV file on startup. The CSV
 
 Here are the top 4 options for deploying your FastAPI application, ordered by ease of use and free tier availability:
 
-### 1. Railway.app (Recommended - Easiest)
+### 1. Railway.app (Recommended)
 
 [Railway.app](https://railway.app/) offers the simplest deployment process with a generous free tier:
 
@@ -226,51 +223,14 @@ Here are the top 4 options for deploying your FastAPI application, ordered by ea
    fly deploy
    ```
 
-### Production Checklist
+## Documentation Site
 
-Before deploying, ensure you:
+This project includes a comprehensive documentation site built with MkDocs and the Material theme. The documentation is automatically deployed to Netlify whenever changes are pushed to the main branch.
 
-1. Set up environment variables:
+- **Live Documentation**: [https://cool-baklava-79da84.netlify.app/](https://cool-baklava-79da84.netlify.app/)
+- **Deploy Status**: [![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/sites/cool-baklava-79da84/deploys)
 
-   - `DATABASE_URL`
-   - `ENVIRONMENT=production`
-
-2. Security considerations:
-
-   - Enable CORS if needed
-   - Set up proper authentication
-   - Use HTTPS
-   - Configure rate limiting
-
-3. Monitoring setup:
-
-   - Application logs
-   - Error tracking
-   - Performance monitoring
-
-4. Database considerations:
-   - Backup strategy
-   - Data persistence
-   - Connection pooling
-
-### Troubleshooting Common Issues
-
-1. **Application Not Starting**
-
-   - Check environment variables
-   - Verify database connection
-   - Review application logs
-
-2. **Database Issues**
-
-   - Ensure database URL is correct
-   - Check database permissions
-   - Verify data import process
-
-3. **Deployment Failures**
-   - Check build logs
-   - Verify requirements.txt
-   - Ensure proper Python version
+For more information about the documentation site, see the [Deployment Guide](https://cool-baklava-79da84.netlify.app/guides/deployment/).
 
 ## Contributing
 
@@ -278,6 +238,8 @@ Before deploying, ensure you:
 2. Create a new branch for your feature
 3. Make your changes
 4. Submit a pull request
+
+For more detailed contribution guidelines, see the [Contributing Guide](https://cool-baklava-79da84.netlify.app/development/contributing/).
 
 ## License
 
