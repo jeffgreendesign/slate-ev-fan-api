@@ -1,6 +1,6 @@
 # Slate EV Truck API Documentation
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/projects/cool-baklava-79da84/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/sites/cool-baklava-79da84/deploys)
 
 Welcome to the official documentation for the Slate EV Truck API. This API provides information about the Slate EV truck, including specifications, features, and other relevant details.
 
@@ -40,15 +40,34 @@ slate-ev-fan-api/
 │   ├── api/
 │   │   └── endpoints.py    # API route definitions
 │   ├── models/
-│   │   └── models.py      # Pydantic models
+│   │   └── vehicle.py      # SQLAlchemy ORM models
+│   ├── schemas/
+│   │   └── vehicle.py      # Pydantic schemas
 │   ├── services/
-│   │   └── csv_import.py  # CSV data import service
-│   └── database.py        # Database configuration
+│   │   └── csv_import.py   # CSV data import service
+│   └── db/
+│       └── session.py      # Database configuration
 ├── data/
-│   └── slate.csv         # Vehicle specifications data
-├── main.py               # Main FastAPI application
-└── requirements.txt      # Project dependencies
+│   └── slate.csv          # Vehicle specifications data
+├── docs/                  # Documentation site
+│   ├── docs/              # Markdown documentation files
+│   ├── mkdocs.yml         # MkDocs configuration
+│   ├── netlify.toml       # Netlify configuration
+│   └── requirements.txt   # Documentation dependencies
+├── main.py                # Main FastAPI application
+└── requirements.txt       # Project dependencies
 ```
+
+## Documentation Site
+
+This documentation site is built with [MkDocs](https://www.mkdocs.org/) and the [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) theme. It is automatically deployed to Netlify whenever changes are pushed to the main branch.
+
+### Deployment Status
+
+The documentation site is currently deployed on Netlify:
+
+- **Live URL**: [https://cool-baklava-79da84.netlify.app/](https://cool-baklava-79da84.netlify.app/)
+- **Deploy Status**: [![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/sites/cool-baklava-79da84/deploys)
 
 ## Contributing
 

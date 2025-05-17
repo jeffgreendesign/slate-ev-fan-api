@@ -9,7 +9,7 @@ This guide explains how to deploy the Slate EV Truck API to various hosting plat
 The documentation for this project is currently deployed on Netlify:
 
 - **Live URL**: [https://cool-baklava-79da84.netlify.app/](https://cool-baklava-79da84.netlify.app/)
-- **Deploy Status**: [![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/projects/cool-baklava-79da84/deploys)
+- **Deploy Status**: [![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/sites/cool-baklava-79da84/deploys)
 
 ## Deployment Options
 
@@ -159,25 +159,45 @@ Set up environment variables:
 
 ## Netlify Deployment for Documentation
 
-To deploy this documentation to Netlify:
+This documentation is deployed to Netlify using the following configuration:
 
-1. Create a `netlify.toml` file in the project root:
+1. The `netlify.toml` file in the `docs/` directory:
 
 ```toml
 [build]
-  command = "mkdocs build"
+  base = "docs/"
+  command = "pip install -r requirements.txt && mkdocs build"
   publish = "site"
 
 [build.environment]
   PYTHON_VERSION = "3.11"
+  PIP_DISABLE_PIP_VERSION_CHECK = "1"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 ```
 
-2. Push your code to GitHub
+2. The `requirements.txt` file in the `docs/` directory:
 
-3. Sign up for Netlify and connect your GitHub repository
+```
+mkdocs==1.5.3
+mkdocs-material==9.4.7
+markdown==3.5.1
+mkdocs-autorefs==0.5.0
+mkdocstrings==0.22.0
+mkdocstrings-python==1.7.3
+pymdown-extensions==10.3.1
+```
 
-4. Netlify will automatically build and deploy your documentation
+3. Steps to deploy your own documentation:
 
-5. Configure your custom domain if needed
-
-This documentation is already set up for easy deployment to Netlify.
+   - Fork or clone this repository
+   - Sign up for Netlify and connect your GitHub repository
+   - Configure the build settings:
+     - Base directory: `docs/`
+     - Build command: `pip install -r requirements.txt && mkdocs build`
+     - Publish directory: `site/`
+   - Click "Deploy site"
+   - Optionally configure a custom domain
