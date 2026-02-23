@@ -19,7 +19,6 @@ HOW TO CUSTOMIZE:
 
 import ast
 import os
-import re
 import unittest
 from pathlib import Path
 from typing import NamedTuple
@@ -111,6 +110,11 @@ class TestDatabaseAccessBoundary(unittest.TestCase):
         files = get_python_files(APP_DIR)
         allowed = os.path.normpath(DB_MODULE)
 
+        # NOTE: This scanner checks "from X import create_engine" (ast.ImportFrom)
+        # and "sqlalchemy.create_engine(...)" calls (ast.Call/ast.Attribute).
+        # It does NOT resolve aliases (e.g. "import sqlalchemy as sa;
+        # sa.create_engine(...)") or re-exports. Full import resolution is
+        # out of scope for this guardrail test.
         for filepath in files:
             normalized = os.path.normpath(filepath)
             if normalized == allowed:
@@ -227,6 +231,38 @@ class TestNoDangerousPatterns(unittest.TestCase):
             self.fail(msg)
 
 
+def _get_registered_modules(main_file: str) -> set[str]:
+    """Extract API module names registered in main.py via AST analysis.
+
+    Walks the AST to find imports from app.api.* and include_router calls,
+    so that matches in comments or strings don't cause false positives.
+    """
+    tree = parse_file(main_file)
+    if tree is None:
+        return set()
+
+    registered = set()
+    router_vars: dict[str, str] = {}  # variable name -> module name
+
+    for node in ast.walk(tree):
+        # Track "from app.api.<module> import router [as alias]"
+        if isinstance(node, ast.ImportFrom) and node.module:
+            if node.module.startswith("app.api."):
+                module_name = node.module.rsplit(".", 1)[-1]
+                for alias in node.names:
+                    var_name = alias.asname if alias.asname else alias.name
+                    router_vars[var_name] = module_name
+
+        # Track "<app>.include_router(<var>, ...)" calls
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if node.func.attr == "include_router" and node.args:
+                arg = node.args[0]
+                if isinstance(arg, ast.Name) and arg.id in router_vars:
+                    registered.add(router_vars[arg.id])
+
+    return registered
+
+
 class TestEndpointRegistration(unittest.TestCase):
     """
     Enforces that every endpoint module is registered in main.py.
@@ -253,13 +289,12 @@ class TestEndpointRegistration(unittest.TestCase):
         if not api_modules:
             return
 
-        # Read main.py and check for references to each API module
-        with open(MAIN_FILE, encoding="utf-8") as f:
-            main_content = f.read()
+        # Use AST analysis to find modules actually registered via include_router
+        registered = _get_registered_modules(MAIN_FILE)
 
         unregistered = []
         for module in sorted(api_modules):
-            if not re.search(r'\b' + re.escape(module) + r'\b', main_content):
+            if module not in registered:
                 unregistered.append(module)
 
         if unregistered:
