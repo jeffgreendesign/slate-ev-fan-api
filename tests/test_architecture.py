@@ -19,6 +19,7 @@ HOW TO CUSTOMIZE:
 
 import ast
 import os
+import re
 import unittest
 from pathlib import Path
 from typing import NamedTuple
@@ -90,7 +91,7 @@ def get_python_files(directory: str) -> list[str]:
 def parse_file(filepath: str) -> ast.Module | None:
     """Parse a Python file into an AST, returning None on failure."""
     try:
-        with open(filepath) as f:
+        with open(filepath, encoding="utf-8") as f:
             return ast.parse(f.read(), filename=filepath)
     except (SyntaxError, UnicodeDecodeError):
         return None
@@ -135,21 +136,24 @@ class TestDatabaseAccessBoundary(unittest.TestCase):
                                 )
                             )
 
-                # Check 'import sqlalchemy' then usage of create_engine
-                if isinstance(node, ast.Import):
-                    for alias in node.names:
-                        for forbidden in FORBIDDEN_DB_PATTERNS:
-                            if alias.name == forbidden:
-                                violations.append(
-                                    Violation(
-                                        file=filepath,
-                                        line=node.lineno,
-                                        message=(
-                                            f"Direct import of '{alias.name}' — "
-                                            f"use app.db.session instead"
-                                        ),
-                                    )
-                                )
+                # Check attribute-style calls: sqlalchemy.create_engine(...)
+                if isinstance(node, ast.Call):
+                    if (
+                        isinstance(node.func, ast.Attribute)
+                        and node.func.attr in FORBIDDEN_DB_PATTERNS
+                        and isinstance(node.func.value, ast.Name)
+                        and node.func.value.id == "sqlalchemy"
+                    ):
+                        violations.append(
+                            Violation(
+                                file=filepath,
+                                line=node.lineno,
+                                message=(
+                                    f"Direct call to sqlalchemy.{node.func.attr}() — "
+                                    f"use app.db.session instead"
+                                ),
+                            )
+                        )
 
         if violations:
             msg = f"\nFound {len(violations)} forbidden DB import(s):\n\n"
@@ -177,6 +181,10 @@ class TestNoDangerousPatterns(unittest.TestCase):
             if tree is None:
                 continue
 
+            # NOTE: This scanner checks bare names (eval, exec) and module.attr
+            # patterns (os.system, os.popen). It does NOT resolve aliases or
+            # direct imports like "from os import system; system(...)".
+            # Full import resolution is out of scope for this guardrail test.
             for node in ast.walk(tree):
                 if isinstance(node, ast.Call):
                     # Check bare function calls: eval(...), exec(...)
@@ -246,12 +254,12 @@ class TestEndpointRegistration(unittest.TestCase):
             return
 
         # Read main.py and check for references to each API module
-        with open(MAIN_FILE) as f:
+        with open(MAIN_FILE, encoding="utf-8") as f:
             main_content = f.read()
 
         unregistered = []
         for module in sorted(api_modules):
-            if module not in main_content:
+            if not re.search(r'\b' + re.escape(module) + r'\b', main_content):
                 unregistered.append(module)
 
         if unregistered:

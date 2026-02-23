@@ -7,7 +7,7 @@ globs: ["app/**/*.py", "main.py", "tests/**/*.py"]
 
 ## Critical Rules
 
-- Never use `eval()`, `exec()`, or `os.system()` — use subprocess or structured alternatives
+- Never use `eval()`, `exec()`, or `os.system()` — use `subprocess.run()` with a list of arguments (never `shell=True`)
 - Never build SQL with f-strings or `%` formatting — use SQLAlchemy ORM or parameterized queries
 - Never use `from sqlalchemy import create_engine` outside `app/db/session.py`
 - Always use `python -m pip` instead of bare `pip` in scripts and commands

@@ -98,7 +98,7 @@ def my_endpoint(db: Session = Depends(get_db)):
 
 ### No Dangerous Functions
 
-**Rule:** Never use `eval()`, `exec()`, or `os.system()` in application code.
+**Rule:** Never use `eval()`, `exec()`, `os.system()`, or `os.popen()` in application code.
 **Bug it prevents:** Code injection from untrusted input.
 
 ### SQL Safety

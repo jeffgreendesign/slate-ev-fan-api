@@ -39,11 +39,14 @@ check_pattern() {
   local results
   results=$(grep -rnE "$pattern" "$SCAN_DIR"/ 2>/dev/null || true)
 
-  # Apply exclusions
+  # Apply exclusions (filter empties first)
+  local filtered=()
   for exclude in "${exclude_patterns[@]}"; do
-    if [ -n "$exclude" ]; then
-      results=$(echo "$results" | grep -v "$exclude" || true)
-    fi
+    [ -n "$exclude" ] && filtered+=("$exclude")
+  done
+
+  for exclude in "${filtered[@]}"; do
+    results=$(echo "$results" | grep -v "$exclude" || true)
   done
 
   # Remove empty lines
@@ -74,7 +77,7 @@ check_pattern \
   "Hardcoded secrets (api_key, password, secret, token assigned to string literal)" \
   "(api_key|secret_key|password|token|secret)\s*=\s*['\"][^'\"]{8,}['\"]" \
   "HIGH" \
-  "test_" "\.example" "#.*=" "\.pyc"
+  "test_" "\.example" "^\s*#" "\.pyc"
 
 check_pattern \
   "eval() or exec() usage — code injection risk" \
