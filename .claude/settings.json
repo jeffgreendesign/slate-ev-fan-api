@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pytest*)",
+      "Bash(python -m pip*)",
+      "Bash(pip install*)",
+      "Bash(pip freeze*)",
+      "Bash(uvicorn*)",
+      "Bash(bash scripts/*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(*sqlite3*DROP*)",
+      "Bash(*psql*DROP*)",
+      "Bash(*mysql*DROP*)",
+      "Bash(*python*DROP TABLE*)",
+      "Bash(*python*DROP DATABASE*)",
+      "Bash(curl * | sh*)",
+      "Bash(curl * | bash*)",
+      "Bash(wget * | sh*)",
+      "Bash(wget * | bash*)",
+      "Bash(python -c *os.remove*)",
+      "Bash(python -c *shutil.rmtree*)",
+      "Bash(python -c *drop*table*)",
+      "Bash(: > *)",
+      "Bash(truncate *)"
+    ]
+  }
+}

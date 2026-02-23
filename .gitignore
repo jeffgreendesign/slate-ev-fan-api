@@ -44,6 +44,7 @@ wheels/
 !data/slate.csv
 *.db
 *.json
+!.claude/settings.json
 *.sqlite
 *.sqlite3
 db.sqlite3
