@@ -1,0 +1,33 @@
+---
+description: Python/FastAPI conventions and safety rules
+globs: ["app/**/*.py", "main.py", "tests/**/*.py"]
+---
+
+# Python Rules
+
+## Critical Rules
+
+- Never use `eval()`, `exec()`, or `os.system()` — use subprocess or structured alternatives
+- Never build SQL with f-strings or `%` formatting — use SQLAlchemy ORM or parameterized queries
+- Never use `from sqlalchemy import create_engine` outside `app/db/session.py`
+- Always use `python -m pip` instead of bare `pip` in scripts and commands
+
+## Database Access
+
+- Only `app/db/session.py` creates the engine and session factory
+- All other modules get sessions via the `get_db()` FastAPI dependency
+- Never import `engine` or `SessionLocal` directly in endpoint or service code — use dependency injection
+
+## Import Patterns
+
+- Order: stdlib → third-party → local (`app.`)
+- No circular imports between app modules
+- Models import Base from `app.db.session`, never the reverse
+
+## Common Mistakes
+
+- Using `datetime.utcnow()` — it's deprecated in Python 3.12+, use `datetime.now(UTC)`
+- Returning raw SQLAlchemy objects without Pydantic schemas
+- Missing `response_model` on FastAPI route decorators
+- String interpolation in SQL queries (use ORM `.filter()` instead)
+- Forgetting `Depends(get_db)` and creating sessions manually in endpoints

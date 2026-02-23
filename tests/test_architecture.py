@@ -1,0 +1,266 @@
+"""
+Architecture Guardrail Tests — Slate EV Fan API
+============================================================================
+Enforces architectural rules using AST parsing. Catches violations at test
+time before they make it into the codebase.
+
+Adapted from jeffgreendesign/project-scaffold.
+
+WHAT IT ENFORCES:
+1. Single database access point — only app/db/session.py may call create_engine
+2. No dangerous functions — eval(), exec(), os.system() are banned in app code
+3. Endpoint registration — every router in app/api/ is included in main.py
+
+HOW TO CUSTOMIZE:
+- Update the constants at the top of each test class
+- Add/remove tests based on your project's architecture
+============================================================================
+"""
+
+import ast
+import os
+import unittest
+from pathlib import Path
+from typing import NamedTuple
+
+
+class Violation(NamedTuple):
+    file: str
+    line: int
+    message: str
+
+
+# ============================================================================
+# Project-specific constants
+# ============================================================================
+
+# Root directory to scan (application code only)
+APP_DIR = "app"
+
+# The single file allowed to create the database engine
+DB_MODULE = "app/db/session.py"
+
+# Functions/imports that should only appear in the DB module
+FORBIDDEN_DB_PATTERNS = [
+    "create_engine",
+]
+
+# Dangerous functions banned from all application code
+DANGEROUS_FUNCTIONS = [
+    "eval",
+    "exec",
+]
+
+# Dangerous attribute calls banned from all application code
+DANGEROUS_ATTR_CALLS = [
+    ("os", "system"),
+    ("os", "popen"),
+]
+
+# Main application file where routers are registered
+MAIN_FILE = "main.py"
+
+# Directory containing endpoint files
+API_DIR = "app/api"
+
+
+def get_python_files(directory: str) -> list[str]:
+    """Recursively get all Python files in a directory."""
+    files = []
+    root = Path(directory)
+
+    if not root.exists():
+        return files
+
+    for path in root.rglob("*.py"):
+        parts = path.parts
+        if any(
+            p in ("__pycache__", ".venv", "venv", "node_modules", ".git")
+            for p in parts
+        ):
+            continue
+        # Skip test files
+        if path.name.startswith("test_") or path.name.endswith("_test.py"):
+            continue
+        files.append(str(path))
+
+    return files
+
+
+def parse_file(filepath: str) -> ast.Module | None:
+    """Parse a Python file into an AST, returning None on failure."""
+    try:
+        with open(filepath) as f:
+            return ast.parse(f.read(), filename=filepath)
+    except (SyntaxError, UnicodeDecodeError):
+        return None
+
+
+class TestDatabaseAccessBoundary(unittest.TestCase):
+    """
+    Enforces single database access point.
+
+    Rule: Only app/db/session.py may call create_engine.
+    Bug: Direct engine creation bypasses connection pooling and session management.
+    Prevent: AST scanning catches create_engine imports outside the approved module.
+    """
+
+    def test_no_direct_engine_creation(self) -> None:
+        violations: list[Violation] = []
+        files = get_python_files(APP_DIR)
+        allowed = os.path.normpath(DB_MODULE)
+
+        for filepath in files:
+            normalized = os.path.normpath(filepath)
+            if normalized == allowed:
+                continue
+
+            tree = parse_file(filepath)
+            if tree is None:
+                continue
+
+            for node in ast.walk(tree):
+                # Check 'from sqlalchemy import create_engine'
+                if isinstance(node, ast.ImportFrom) and node.module:
+                    for alias in node.names:
+                        if alias.name in FORBIDDEN_DB_PATTERNS:
+                            violations.append(
+                                Violation(
+                                    file=filepath,
+                                    line=node.lineno,
+                                    message=(
+                                        f"Direct import of '{alias.name}' from "
+                                        f"'{node.module}' — use app.db.session instead"
+                                    ),
+                                )
+                            )
+
+                # Check 'import sqlalchemy' then usage of create_engine
+                if isinstance(node, ast.Import):
+                    for alias in node.names:
+                        for forbidden in FORBIDDEN_DB_PATTERNS:
+                            if alias.name == forbidden:
+                                violations.append(
+                                    Violation(
+                                        file=filepath,
+                                        line=node.lineno,
+                                        message=(
+                                            f"Direct import of '{alias.name}' — "
+                                            f"use app.db.session instead"
+                                        ),
+                                    )
+                                )
+
+        if violations:
+            msg = f"\nFound {len(violations)} forbidden DB import(s):\n\n"
+            for v in violations:
+                msg += f"  {v.file}:{v.line} — {v.message}\n"
+            msg += f"\nOnly {DB_MODULE} may call create_engine."
+            self.fail(msg)
+
+
+class TestNoDangerousPatterns(unittest.TestCase):
+    """
+    Enforces that dangerous functions are not used in application code.
+
+    Rule: eval(), exec(), os.system(), os.popen() are banned.
+    Bug: These functions enable code injection and command injection.
+    Prevent: AST scanning catches calls to these functions.
+    """
+
+    def test_no_eval_exec(self) -> None:
+        violations: list[Violation] = []
+        files = get_python_files(APP_DIR)
+
+        for filepath in files:
+            tree = parse_file(filepath)
+            if tree is None:
+                continue
+
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Call):
+                    # Check bare function calls: eval(...), exec(...)
+                    if (
+                        isinstance(node.func, ast.Name)
+                        and node.func.id in DANGEROUS_FUNCTIONS
+                    ):
+                        violations.append(
+                            Violation(
+                                file=filepath,
+                                line=node.lineno,
+                                message=f"Call to {node.func.id}() — banned in app code",
+                            )
+                        )
+
+                    # Check attribute calls: os.system(...), os.popen(...)
+                    if isinstance(node.func, ast.Attribute):
+                        if isinstance(node.func.value, ast.Name):
+                            for mod, func in DANGEROUS_ATTR_CALLS:
+                                if (
+                                    node.func.value.id == mod
+                                    and node.func.attr == func
+                                ):
+                                    violations.append(
+                                        Violation(
+                                            file=filepath,
+                                            line=node.lineno,
+                                            message=(
+                                                f"Call to {mod}.{func}() — "
+                                                f"banned in app code"
+                                            ),
+                                        )
+                                    )
+
+        if violations:
+            msg = f"\nFound {len(violations)} dangerous function call(s):\n\n"
+            for v in violations:
+                msg += f"  {v.file}:{v.line} — {v.message}\n"
+            msg += "\nUse safe alternatives (subprocess.run with shell=False, etc.)."
+            self.fail(msg)
+
+
+class TestEndpointRegistration(unittest.TestCase):
+    """
+    Enforces that every endpoint module is registered in main.py.
+
+    Rule: Every .py file in app/api/ that defines a router must be imported in main.py.
+    Bug: New endpoints that aren't registered are silently unreachable.
+    Prevent: This test compares API modules to main.py imports.
+    """
+
+    def test_all_api_routers_registered(self) -> None:
+        if not os.path.exists(API_DIR):
+            self.skipTest(f"No API directory at {API_DIR}")
+
+        if not os.path.exists(MAIN_FILE):
+            self.skipTest(f"No main file at {MAIN_FILE}")
+
+        # Find all non-__init__ Python files in app/api/
+        api_modules = set()
+        for filepath in get_python_files(API_DIR):
+            module_name = Path(filepath).stem
+            if module_name != "__init__":
+                api_modules.add(module_name)
+
+        if not api_modules:
+            return
+
+        # Read main.py and check for references to each API module
+        with open(MAIN_FILE) as f:
+            main_content = f.read()
+
+        unregistered = []
+        for module in sorted(api_modules):
+            if module not in main_content:
+                unregistered.append(module)
+
+        if unregistered:
+            msg = f"\nFound {len(unregistered)} unregistered endpoint module(s):\n\n"
+            for module in unregistered:
+                msg += f"  - {module} (in {API_DIR}/{module}.py)\n"
+            msg += f"\nRegister them in {MAIN_FILE} with include_router()."
+            self.fail(msg)
+
+
+if __name__ == "__main__":
+    unittest.main()
