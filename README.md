@@ -1,6 +1,6 @@
 # Slate EV Truck API
 
-A FastAPI-based REST API that provides information about the Slate EV truck, including specifications, features, and other relevant details. The API includes Swagger UI documentation for easy testing and exploration.
+A FastAPI-based REST API that provides public information about the Slate Truck, including preproduction specifications, features, source notes, and known unknowns. This is an unofficial fan API; it is not affiliated with Slate Auto, and specs/pricing/range/timing should be treated as public preproduction data unless Slate publishes final production values.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9a67d4ca-a675-4c4b-ace4-26453b4bc15d/deploy-status)](https://app.netlify.com/sites/cool-baklava-79da84/deploys)
 
@@ -12,10 +12,11 @@ The complete documentation for this API is available at [https://cool-baklava-79
 
 ## Features
 
-- RESTful API endpoints for truck specifications and features
+- RESTful API endpoints for truck specifications, features, and source notes
 - Interactive API documentation with Swagger UI
 - Data validation using Pydantic models
 - Category-based feature filtering
+- Public-source caveats for preproduction data
 - Detailed error handling
 - SQLite database for data persistence
 - CSV data import functionality
@@ -90,6 +91,13 @@ API documentation (Swagger UI) will be available at `http://localhost:8000/docs`
 - **URL Parameters**:
   - `feature_name`: Name of the feature to retrieve
 - **Response**: Feature details
+
+### 4. Source Metadata
+
+- **URL**: `/sources`
+- **Method**: GET
+- **Description**: Get public source notes, caveats, and known unknowns for the current preproduction Slate data
+- **Response**: Source metadata object
 
 ## Project Structure
 

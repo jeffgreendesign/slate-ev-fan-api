@@ -1,0 +1,51 @@
+{
+  "id": "slate-truck-public-specs-2026-06-08",
+  "vehicle_id": "slate-truck",
+  "official_affiliation": false,
+  "last_reviewed": "2026-06-08",
+  "status": "preproduction",
+  "disclaimer": "Unofficial fan API data compiled from public sources. Slate Truck specifications, pricing, range, production timing, and availability are preproduction/projected and subject to change. Projected range is not final EPA-rated range.",
+  "primary_sources": [
+    {
+      "label": "Slate Auto FAQ",
+      "url": "https://www.slate.auto/en/faq",
+      "use": "Current official reservation, pricing-timing, range, configuration, and caveat language"
+    },
+    {
+      "label": "Slate Auto charging page",
+      "url": "https://www.slate.auto/en/charging",
+      "use": "NACS, onboard charger, Level 1/2, DC fast-charge timing and Supercharger-access language"
+    },
+    {
+      "label": "Slate Auto official press/spec PDF",
+      "url": "https://www.slate.auto/api/contentful/download?entryId=qvGTtGysiBEP2JW8jM7GR",
+      "use": "Detailed preproduction spec table: dimensions, weight, payload, towing, motor, battery, bed, chassis"
+    },
+    {
+      "label": "Slate Auto Warsaw factory page",
+      "url": "https://www.slate.auto/en/warsaw",
+      "use": "Warsaw, Indiana manufacturing status and late-2026 production target language"
+    },
+    {
+      "label": "NHTSA vPIC manufacturer details",
+      "url": "https://vpic.nhtsa.dot.gov/api/vehicles/getmanufacturerdetails/Slate?format=json",
+      "use": "Structured manufacturer record for SLATE AUTO LLC and vehicle types"
+    }
+  ],
+  "known_unknowns": [
+    "Final MSRP/base price",
+    "Final EPA-certified range and MPGe",
+    "Battery usable capacity and chemistry",
+    "GVWR/GAWR",
+    "Final crash-test ratings",
+    "Warranty terms",
+    "Accessory/SUV kit pricing",
+    "Final trim names and production configuration differences"
+  ],
+  "field_confidence_policy": {
+    "high": "Official Slate page/PDF or NHTSA structured record",
+    "medium": "Officially mentioned but projected/target/up-to or not independently validated",
+    "low": "Third-party-only or incentive-dependent reporting",
+    "unknown": "Not public or not final; represent as null/unknown rather than guessing"
+  }
+}

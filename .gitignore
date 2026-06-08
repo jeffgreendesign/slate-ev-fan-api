@@ -1,6 +1,7 @@
 # Development Environment
 .env
 .env.*
+.venv/
 ENV/
 env/
 venv/
@@ -45,6 +46,7 @@ wheels/
 *.db
 *.json
 !.claude/settings.json
+!data/slate_sources.json
 *.sqlite
 *.sqlite3
 db.sqlite3
