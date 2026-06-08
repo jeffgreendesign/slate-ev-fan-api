@@ -1,45 +1,45 @@
 Category,Specification,Value,Unit,Optional,Additional Info
-Basic,Model,2027 Slate Truck,,,
+Basic,Model,Slate Truck,,,
 Basic,Manufacturer,Slate Auto,,,
-Basic,Vehicle Type,Electric pickup truck with SUV conversion option,,,
-Basic,Production Start,Q4 2026,,,
-Basic,Assembly Location,Warsaw,Indiana,USA,
-Dimensions,Length,4435,mm,,
-Dimensions,Width,1793,mm,,
-Dimensions,Height,1760,mm,,
-Dimensions,Wheelbase,2766,mm,,
-Dimensions,Bed Length,1524,mm,,
-Performance,0-60 mph,8.0,seconds,,
-Performance,Top Speed,148,km/h,,
-Performance,Fuel Economy,96,MPGe,,
-Powertrain,Motor Type,150 kW permanent magnet synchronous,,,
+Basic,Vehicle Type,Preproduction electric pickup with SUV accessory conversion option,,,
+Basic,Production Start,Late 2026 target,,,
+Basic,Assembly Location,"Warsaw, Indiana, USA",,,
+Dimensions,Length,4434.84,mm,,174.6 in
+Dimensions,Width,1793.24,mm,,70.6 in without mirrors
+Dimensions,Height,1760.22,mm,,69.3 in
+Dimensions,Wheelbase,2766.06,mm,,108.9 in
+Dimensions,Bed Length,1524,mm,,60.0 in
+Performance,0-60 mph,8.0,seconds,,Estimated
+Performance,Top Speed,145,km/h,,90 mph
+Performance,Fuel Economy,96,MPGe,,Estimated combined MPGe; final EPA rating not available
+Powertrain,Motor Type,150 kW permanent-magnet synchronous motor,,,
 Powertrain,Drive Type,Rear-wheel drive,,,
 Powertrain,Power Output,201,hp,,
-Powertrain,Torque,264,Nm,,
-Battery,Standard Capacity,52.7,kWh,,
-Battery,Optional Capacity,84.3,kWh,Yes,
-Battery,Standard Range,240,km,,
-Battery,Optional Range,390,km,Yes,
+Powertrain,Torque,264,Nm,,195 lb-ft
+Battery,Standard Capacity,52.7,kWh,,Projected/preproduction
+Battery,Optional Capacity,84.3,kWh,Yes,Accessory/extended pack; projected/preproduction
+Battery,Standard Range,241,km,,150 mi projected; not EPA rated
+Battery,Optional Range,386,km,Yes,240 mi projected; not EPA rated
 Charging,Port Type,NACS,,,
 Charging,Onboard Charger,11,kW,,
-Charging,Level 1 Time,11,hours,,
-Charging,Level 2 Time,5,hours,,
-Charging,DC Fast Charging Time,30,minutes,,
-Capacity,Base Curb Weight,1634,kg,,
-Capacity,Max Payload,650,kg,,
-Capacity,Max Towing,454,kg,,
-Capacity,Frunk Volume,198,L,,
-Capacity,Bed Volume,1048,L,,
-Capacity,Cargo Space,963,L,,
-Feature,Power Locks,Standard,,Safety,
-Feature,Cruise Control,Standard,,Safety,
-Feature,Air Conditioning,Standard,,Comfort,
-Feature,Phone Mount,Standard,,Technology,
-Feature,Tablet Mount,Optional,,Technology,
-Feature,Lift Kit,Optional,,Performance,
-Feature,All-Terrain Tires,Optional,,Performance,
-Feature,SUV Conversion Kit,Optional,,Body,
-Pricing,Base Price,27500,USD,,
-Pricing,Federal Tax Credit,7500,USD,,
-Pricing,Final Price,20000,USD,,
-Pricing,Reservation Deposit,50,USD,,
+Charging,Level 1 Time,11,hours,,20-100% official estimate
+Charging,Level 2 Time,5,hours,,20-100% under 5 hours official estimate
+Charging,DC Fast Charging Time,30,minutes,,20-80% under 30 minutes at up to 120 kW
+Capacity,Base Curb Weight,1634,kg,,3602 lb
+Capacity,Max Payload,650,kg,,1433 lb official spec; public copy may round to 1400 lb
+Capacity,Max Towing,454,kg,,1000 lb
+Capacity,Frunk Volume,198,L,,7.0 cu ft
+Capacity,Bed Volume,1048,L,,37.0 cu ft
+Capacity,Cargo Space,963,L,,34.0 cu ft SUV cargo behind seats
+Feature,Factory Body,2-seat pickup,,,Body
+Feature,SUV Conversion Kit,Optional accessory kit for 5-seat SUV conversion,,Yes,Body
+Feature,Accessory Catalog,100+ accessories announced,,,Customization
+Feature,Phone Mount,Standard phone mount with USB power,,,Technology
+Feature,Tablet Mount,Optional dedicated tablet accessory,,Yes,Technology
+Feature,Steel Wheels,Standard 17 x 7 steel wheels,,,Chassis
+Feature,Crank Windows,Standard manual windows,,,Interior
+Feature,Physical HVAC Controls,Standard physical HVAC knobs,,,Interior
+Feature,NACS Charging,Standard NACS charging port with Tesla Supercharger access,,,Charging
+Feature,Active Emergency Braking,Mentioned public safety feature; final ratings not available,,,Safety
+Feature,Forward Collision Warning,Mentioned public safety feature; final ratings not available,,,Safety
+Pricing,Reservation Deposit,50,USD,,Refundable reservation deposit

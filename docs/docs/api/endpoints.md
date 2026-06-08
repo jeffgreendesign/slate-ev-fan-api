@@ -1,197 +1,105 @@
 # API Endpoints
 
-This section details all the available endpoints in the Slate EV Truck API.
+Base path: `/api/v1`
 
-## Root Endpoint
+This is an unofficial fan API. Vehicle specs are compiled from public sources and remain preproduction/projected unless a field explicitly says otherwise.
 
-### GET /
+## GET `/api/v1/`
 
-Returns the main vehicle information.
+Returns the main Slate Truck record imported from `data/slate.csv`.
 
-**Parameters**: None
+Important current caveats:
 
-**Response**:
+- Model status: preproduction
+- Production start: late 2026 target
+- Range: projected, not final EPA-rated range
+- Pricing: final MSRP not announced; only the $50 refundable reservation deposit is treated as structured price data
+
+Selected response fields:
 
 ```json
 {
-  "id": 1,
-  "model": "Slate EV Truck",
-  "manufacturer": "Slate Motors",
-  "vehicle_type": "Pickup",
-  "production_start": "2027",
-  "assembly_location": "Detroit, MI",
-  "created_at": "2023-10-15T12:00:00",
-  "updated_at": "2023-10-15T12:00:00",
+  "model": "Slate Truck",
+  "manufacturer": "Slate Auto",
+  "vehicle_type": "Preproduction electric pickup with SUV accessory conversion option",
+  "production_start": "Late 2026 target",
+  "assembly_location": "Warsaw",
   "dimensions": {
-    "id": 1,
-    "vehicle_id": 1,
-    "length_mm": 5800,
-    "width_mm": 2100,
-    "height_mm": 1950,
-    "wheelbase_mm": 3800,
-    "bed_length_mm": 1800
-  },
-  "performance": {
-    "id": 1,
-    "vehicle_id": 1,
-    "acceleration_0_60": 3.5,
-    "top_speed_kmh": 180,
-    "fuel_economy_mpge": 85
-  },
-  "powertrain": {
-    "id": 1,
-    "vehicle_id": 1,
-    "motor_type": "Permanent Magnet Synchronous",
-    "drive_type": "All-Wheel Drive",
-    "power_output_hp": 500,
-    "torque_nm": 800
+    "length_mm": 4434.84,
+    "width_mm": 1793.24,
+    "height_mm": 1760.22,
+    "wheelbase_mm": 2766.06,
+    "bed_length_mm": 1524.0
   },
   "battery": {
-    "id": 1,
-    "vehicle_id": 1,
-    "standard_capacity_kwh": 100.0,
-    "optional_capacity_kwh": 150.0,
-    "standard_range_km": 480,
-    "optional_range_km": 720
+    "standard_capacity_kwh": 52.7,
+    "optional_capacity_kwh": 84.3,
+    "standard_range_km": 241,
+    "optional_range_km": 386
   },
   "charging": {
-    "id": 1,
-    "vehicle_id": 1,
-    "port_type": "CCS",
-    "onboard_charger_kw": 11.5,
-    "level1_charging_time_hours": 36.0,
-    "level2_charging_time_hours": 10.0,
-    "dc_fast_charging_time_minutes": 45
+    "port_type": "NACS",
+    "onboard_charger_kw": 11.0,
+    "level1_charging_time_hours": 11.0,
+    "level2_charging_time_hours": 5.0,
+    "dc_fast_charging_time_minutes": 30
   },
-  "features": [
-    {
-      "id": 1,
-      "vehicle_id": 1,
-      "name": "Advanced Driver Assistance",
-      "description": "Includes adaptive cruise control, lane keeping assist, and automatic emergency braking",
-      "category": "Safety",
-      "is_optional": false,
-      "price": null
-    },
-    {
-      "id": 2,
-      "vehicle_id": 1,
-      "name": "Fast Charging",
-      "description": "Supports DC fast charging up to 250kW",
-      "category": "Charging",
-      "is_optional": false,
-      "price": null
-    }
-  ],
   "pricing": {
-    "id": 1,
-    "vehicle_id": 1,
-    "base_price": 45000.0,
-    "federal_tax_credit": 7500.0,
-    "final_price": 37500.0,
-    "reservation_deposit": 1000.0
+    "base_price": null,
+    "federal_tax_credit": null,
+    "final_price": null,
+    "reservation_deposit": 50.0
   }
 }
 ```
 
-**Status Codes**:
+## GET `/api/v1/features`
 
-- `200 OK`: Success
-- `404 Not Found`: Vehicle not found
+Returns all imported features. Supports optional exact category filtering.
 
-## Features
+Example:
 
-### GET /features
-
-Retrieves all features of the Slate EV truck, optionally filtered by category.
-
-**Parameters**:
-
-| Name     | Type   | In    | Description                            |
-| -------- | ------ | ----- | -------------------------------------- |
-| category | string | query | (Optional) Filter features by category |
-
-**Response**:
-
-```json
-[
-  {
-    "id": 1,
-    "vehicle_id": 1,
-    "name": "Advanced Driver Assistance",
-    "description": "Includes adaptive cruise control, lane keeping assist, and automatic emergency braking",
-    "category": "Safety",
-    "is_optional": false,
-    "price": null
-  },
-  {
-    "id": 2,
-    "vehicle_id": 1,
-    "name": "Fast Charging",
-    "description": "Supports DC fast charging up to 250kW",
-    "category": "Charging",
-    "is_optional": false,
-    "price": null
-  }
-]
+```bash
+curl "http://localhost:8000/api/v1/features?category=Charging"
 ```
 
-**Status Codes**:
+## GET `/api/v1/features/{feature_name}`
 
-- `200 OK`: Success
-- `404 Not Found`: No features found
+Returns one feature by exact feature name.
 
-### GET /features/{feature_name}
+Example:
 
-Retrieves details of a specific feature by name.
+```bash
+curl "http://localhost:8000/api/v1/features/NACS%20Charging"
+```
 
-**Parameters**:
+## GET `/api/v1/sources`
 
-| Name         | Type   | In   | Description         |
-| ------------ | ------ | ---- | ------------------- |
-| feature_name | string | path | Name of the feature |
+Returns source metadata, caveats, and known unknowns used for the current data refresh.
 
-**Response**:
+Example:
+
+```bash
+curl "http://localhost:8000/api/v1/sources"
+```
+
+Selected response fields:
 
 ```json
 {
-  "id": 1,
-  "vehicle_id": 1,
-  "name": "Advanced Driver Assistance",
-  "description": "Includes adaptive cruise control, lane keeping assist, and automatic emergency braking",
-  "category": "Safety",
-  "is_optional": false,
-  "price": null
+  "official_affiliation": false,
+  "last_reviewed": "2026-06-08",
+  "status": "preproduction",
+  "disclaimer": "Unofficial fan API data compiled from public sources...",
+  "primary_sources": [
+    {
+      "label": "Slate Auto FAQ",
+      "url": "https://www.slate.auto/en/faq"
+    }
+  ],
+  "known_unknowns": [
+    "Final MSRP/base price",
+    "Final EPA-certified range and MPGe"
+  ]
 }
-```
-
-**Status Codes**:
-
-- `200 OK`: Success
-- `404 Not Found`: Feature not found
-
-## Examples
-
-### Retrieving Vehicle Information
-
-```bash
-curl -X GET "http://localhost:8000/"
-```
-
-### Retrieving All Features
-
-```bash
-curl -X GET "http://localhost:8000/features"
-```
-
-### Filtering Features by Category
-
-```bash
-curl -X GET "http://localhost:8000/features?category=Safety"
-```
-
-### Retrieving a Specific Feature
-
-```bash
-curl -X GET "http://localhost:8000/features/Advanced%20Driver%20Assistance"
 ```
