@@ -24,6 +24,18 @@ def test_sources_endpoint_exposes_public_caveats():
     assert any(source["url"] == "https://www.slate.auto/en/faq" for source in data["primary_sources"])
 
 
+def test_load_sources_reports_missing_file(tmp_path, monkeypatch):
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    monkeypatch.chdir(tmp_path)
+
+    with pytest.raises(HTTPException) as exc_info:
+        _load_sources()
+
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.detail == "Source metadata not found"
+
+
 def test_load_sources_reports_invalid_json(tmp_path, monkeypatch):
     data_dir = tmp_path / "data"
     data_dir.mkdir()
