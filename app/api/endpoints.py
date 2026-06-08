@@ -17,7 +17,10 @@ def _load_sources() -> dict[str, Any]:
     sources_path = Path("data/slate_sources.json")
     if not sources_path.exists():
         raise HTTPException(status_code=404, detail="Source metadata not found")
-    return json.loads(sources_path.read_text(encoding="utf-8"))
+    try:
+        return json.loads(sources_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=500, detail="Source metadata is invalid JSON") from exc
 
 @router.get("/", response_model=VehicleSchema)
 async def get_vehicle(db: Session = Depends(get_db)):
@@ -50,7 +53,7 @@ async def get_feature(feature_name: str, db: Session = Depends(get_db)):
     return feature
 
 
-@router.get("/sources")
+@router.get("/sources", response_model=dict[str, Any])
 async def get_sources():
     """Get public source metadata and caveats for the Slate data."""
     return _load_sources()
