@@ -26,7 +26,9 @@ YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-SCAN_DIR="app"
+# Scan targets may be directories or individual files.
+SCAN_TARGETS=("app" "main.py")
+SCAN_LABEL="${SCAN_TARGETS[*]}"
 FINDINGS=0
 
 check_pattern() {
@@ -37,7 +39,7 @@ check_pattern() {
   local exclude_patterns=("$@")
 
   local results
-  results=$(grep -rnE "$pattern" "$SCAN_DIR"/ 2>/dev/null || true)
+  results=$(grep -rnE "$pattern" "${SCAN_TARGETS[@]}" 2>/dev/null || true)
 
   # Apply exclusions (filter empties first)
   local filtered=()
@@ -67,7 +69,7 @@ check_pattern() {
 }
 
 echo "============================================"
-echo " Security Scan — $SCAN_DIR/"
+echo " Security Scan — $SCAN_LABEL"
 echo "============================================"
 echo ""
 

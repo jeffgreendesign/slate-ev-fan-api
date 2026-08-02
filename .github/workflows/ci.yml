@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  gates:
+    name: Quality gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run tests
+        run: python -m pytest -v
+
+      - name: Run security scan
+        run: bash scripts/security-check.sh --strict
+
+      - name: Verify CSV imports completely
+        # Guards the data-integrity rule in CLAUDE.md: every CSV row must land
+        # in the database. Previously the Capacity rows were dropped silently.
+        run: |
+          python - <<'PY'
+          import csv, logging
+          logging.basicConfig(level=logging.INFO, format="%(message)s", force=True)
+          from app.db.session import SessionLocal, engine, Base
+          from app.services.csv_import import import_csv_data
+          from pathlib import Path
+
+          csv_path = Path("data/slate.csv")
+          expected = len(list(csv.DictReader(csv_path.open())))
+
+          Base.metadata.create_all(bind=engine)
+          db = SessionLocal()
+          vehicle = import_csv_data(db, csv_path)
+
+          # Every non-Basic, non-Feature row must have produced a non-null field.
+          assert vehicle.capacity.max_payload_kg is not None, "Capacity rows were dropped"
+          assert vehicle.pricing.base_price is not None, "Pricing base_price missing"
+          assert vehicle.battery.usable_capacity_kwh is not None, "Battery usable capacity missing"
+          db.close()
+          print(f"OK: CSV has {expected} data rows and all key fields imported")
+          PY
