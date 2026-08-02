@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 
@@ -88,50 +88,43 @@ class Dimensions(DimensionsBase):
     id: int
     vehicle_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class Performance(PerformanceBase):
     id: int
     vehicle_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class Powertrain(PowertrainBase):
     id: int
     vehicle_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class Battery(BatteryBase):
     id: int
     vehicle_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class Charging(ChargingBase):
     id: int
     vehicle_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class Feature(FeatureBase):
     id: int
     vehicle_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class Pricing(PricingBase):
     id: int
     vehicle_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class Vehicle(BaseModel):
     id: int
@@ -150,5 +143,4 @@ class Vehicle(BaseModel):
     features: List[Feature] = []
     pricing: Optional[Pricing] = None
 
-    class Config:
-        from_attributes = True 
+    model_config = ConfigDict(from_attributes=True) 
