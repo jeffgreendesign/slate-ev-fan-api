@@ -115,6 +115,7 @@ class Pricing(Base):
     federal_tax_credit = Column(Float)
     final_price = Column(Float)
     reservation_deposit = Column(Float)
+    preorder_deposit = Column(Float)
 
     vehicle = relationship("Vehicle", back_populates="pricing")
 
@@ -137,6 +138,7 @@ class Capacity(Base):
     id = Column(Integer, primary_key=True, index=True)
     vehicle_id = Column(Integer, ForeignKey("vehicles.id"))
     curb_weight_kg = Column(Float)
+    gvwr_kg = Column(Float)
     max_payload_kg = Column(Float)
     max_towing_kg = Column(Float)
     frunk_volume_l = Column(Float)

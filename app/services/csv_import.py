@@ -50,9 +50,11 @@ _SPEC_MAP = {
         'Federal Tax Credit': ('federal_tax_credit', float),
         'Final Price': ('final_price', float),
         'Reservation Deposit': ('reservation_deposit', float),
+        'Preorder Deposit': ('preorder_deposit', float),
     },
     'Capacity': {
         'Base Curb Weight': ('curb_weight_kg', float),
+        'GVWR': ('gvwr_kg', float),
         'Max Payload': ('max_payload_kg', float),
         'Max Towing': ('max_towing_kg', float),
         'Frunk Volume': ('frunk_volume_l', float),

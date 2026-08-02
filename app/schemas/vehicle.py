@@ -50,9 +50,11 @@ class PricingBase(BaseModel):
     federal_tax_credit: Optional[float] = None
     final_price: Optional[float] = None
     reservation_deposit: Optional[float] = None
+    preorder_deposit: Optional[float] = None
 
 class CapacityBase(BaseModel):
     curb_weight_kg: Optional[float] = None
+    gvwr_kg: Optional[float] = None
     max_payload_kg: Optional[float] = None
     max_towing_kg: Optional[float] = None
     frunk_volume_l: Optional[float] = None
