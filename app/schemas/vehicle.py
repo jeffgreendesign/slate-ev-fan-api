@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional, List
 from datetime import datetime
 
@@ -23,9 +23,13 @@ class PowertrainBase(BaseModel):
 
 class BatteryBase(BaseModel):
     standard_capacity_kwh: Optional[float] = None
-    optional_capacity_kwh: Optional[float] = None
     standard_range_km: Optional[int] = None
-    optional_range_km: Optional[int] = None
+    usable_capacity_kwh: Optional[float] = None
+    chemistry: Optional[str] = None
+    # Slate consolidated to a single pack in June 2026; these stay in the
+    # response (as null) so existing consumers keep working.
+    optional_capacity_kwh: Optional[float] = Field(default=None, deprecated=True)
+    optional_range_km: Optional[int] = Field(default=None, deprecated=True)
 
 class ChargingBase(BaseModel):
     port_type: Optional[str] = None
@@ -46,6 +50,14 @@ class PricingBase(BaseModel):
     federal_tax_credit: Optional[float] = None
     final_price: Optional[float] = None
     reservation_deposit: Optional[float] = None
+
+class CapacityBase(BaseModel):
+    curb_weight_kg: Optional[float] = None
+    max_payload_kg: Optional[float] = None
+    max_towing_kg: Optional[float] = None
+    frunk_volume_l: Optional[float] = None
+    bed_volume_l: Optional[float] = None
+    cargo_volume_l: Optional[float] = None
 
 # Create schemas
 class DimensionsCreate(DimensionsBase):
@@ -69,6 +81,9 @@ class FeatureCreate(FeatureBase):
 class PricingCreate(PricingBase):
     pass
 
+class CapacityCreate(CapacityBase):
+    pass
+
 class VehicleCreate(BaseModel):
     model: str
     manufacturer: str
@@ -82,6 +97,7 @@ class VehicleCreate(BaseModel):
     charging: Optional[ChargingCreate] = None
     features: Optional[List[FeatureCreate]] = None
     pricing: Optional[PricingCreate] = None
+    capacity: Optional[CapacityCreate] = None
 
 # Response schemas
 class Dimensions(DimensionsBase):
@@ -126,6 +142,12 @@ class Pricing(PricingBase):
 
     model_config = ConfigDict(from_attributes=True)
 
+class Capacity(CapacityBase):
+    id: int
+    vehicle_id: int
+
+    model_config = ConfigDict(from_attributes=True)
+
 class Vehicle(BaseModel):
     id: int
     model: str
@@ -142,5 +164,6 @@ class Vehicle(BaseModel):
     charging: Optional[Charging] = None
     features: List[Feature] = []
     pricing: Optional[Pricing] = None
+    capacity: Optional[Capacity] = None
 
     model_config = ConfigDict(from_attributes=True) 

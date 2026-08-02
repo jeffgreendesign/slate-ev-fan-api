@@ -35,14 +35,15 @@ async def get_features(
     category: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
-    """Get all features, optionally filtered by category."""
+    """Get all features, optionally filtered by category.
+
+    Returns an empty list when nothing matches; a collection endpoint with no
+    results is an empty collection, not a missing resource.
+    """
     query = db.query(Feature)
     if category:
         query = query.filter(Feature.category == category)
-    features = query.all()
-    if not features:
-        raise HTTPException(status_code=404, detail="No features found")
-    return features
+    return query.all()
 
 @router.get("/features/{feature_name}", response_model=FeatureSchema)
 async def get_feature(feature_name: str, db: Session = Depends(get_db)):

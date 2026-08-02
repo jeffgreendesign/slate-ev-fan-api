@@ -1,7 +1,12 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 from app.db.session import Base
+
+
+def _utcnow():
+    """Timezone-aware UTC timestamp (datetime.utcnow is deprecated in 3.12+)."""
+    return datetime.now(timezone.utc)
 
 class Vehicle(Base):
     __tablename__ = "vehicles"
@@ -12,8 +17,8 @@ class Vehicle(Base):
     vehicle_type = Column(String, nullable=False)
     production_start = Column(String)
     assembly_location = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=_utcnow)
+    updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow)
 
     # Relationships
     dimensions = relationship("Dimensions", back_populates="vehicle", uselist=False)
@@ -23,6 +28,7 @@ class Vehicle(Base):
     charging = relationship("Charging", back_populates="vehicle", uselist=False)
     features = relationship("Feature", back_populates="vehicle")
     pricing = relationship("Pricing", back_populates="vehicle", uselist=False)
+    capacity = relationship("Capacity", back_populates="vehicle", uselist=False)
 
 class Dimensions(Base):
     __tablename__ = "dimensions"
@@ -69,6 +75,8 @@ class Battery(Base):
     optional_capacity_kwh = Column(Float)
     standard_range_km = Column(Integer)
     optional_range_km = Column(Integer)
+    usable_capacity_kwh = Column(Float)
+    chemistry = Column(String)
 
     vehicle = relationship("Vehicle", back_populates="battery")
 
@@ -108,4 +116,31 @@ class Pricing(Base):
     final_price = Column(Float)
     reservation_deposit = Column(Float)
 
-    vehicle = relationship("Vehicle", back_populates="pricing") 
+    vehicle = relationship("Vehicle", back_populates="pricing")
+
+class ImportMeta(Base):
+    """Records which CSV revision is currently loaded.
+
+    Startup compares the CSV's content hash against this row, so a refreshed
+    data/slate.csv is actually re-imported instead of being ignored because
+    the database already holds a vehicle.
+    """
+    __tablename__ = "import_meta"
+
+    id = Column(Integer, primary_key=True, index=True)
+    csv_sha256 = Column(String, nullable=False)
+    imported_at = Column(DateTime, default=_utcnow)
+
+class Capacity(Base):
+    __tablename__ = "capacity"
+
+    id = Column(Integer, primary_key=True, index=True)
+    vehicle_id = Column(Integer, ForeignKey("vehicles.id"))
+    curb_weight_kg = Column(Float)
+    max_payload_kg = Column(Float)
+    max_towing_kg = Column(Float)
+    frunk_volume_l = Column(Float)
+    bed_volume_l = Column(Float)
+    cargo_volume_l = Column(Float)
+
+    vehicle = relationship("Vehicle", back_populates="capacity") 
