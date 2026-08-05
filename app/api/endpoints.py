@@ -23,7 +23,7 @@ def _load_sources() -> dict[str, Any]:
         raise HTTPException(status_code=500, detail="Source metadata is invalid JSON") from exc
 
 @router.get("/", response_model=VehicleSchema)
-async def get_vehicle(db: Session = Depends(get_db)):
+def get_vehicle(db: Session = Depends(get_db)):
     """Get the main vehicle information."""
     vehicle = db.query(Vehicle).first()
     if not vehicle:
@@ -31,7 +31,7 @@ async def get_vehicle(db: Session = Depends(get_db)):
     return vehicle
 
 @router.get("/features", response_model=List[FeatureSchema])
-async def get_features(
+def get_features(
     category: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
@@ -46,7 +46,7 @@ async def get_features(
     return query.all()
 
 @router.get("/features/{feature_name}", response_model=FeatureSchema)
-async def get_feature(feature_name: str, db: Session = Depends(get_db)):
+def get_feature(feature_name: str, db: Session = Depends(get_db)):
     """Get a specific feature by name."""
     feature = db.query(Feature).filter(Feature.name == feature_name).first()
     if not feature:
@@ -55,6 +55,6 @@ async def get_feature(feature_name: str, db: Session = Depends(get_db)):
 
 
 @router.get("/sources", response_model=dict[str, Any])
-async def get_sources():
+def get_sources():
     """Get public source metadata and caveats for the Slate data."""
     return _load_sources()
