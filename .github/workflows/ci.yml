@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,6 +34,9 @@ jobs:
       - name: Verify CSV imports completely
         # Guards the data-integrity rule in CLAUDE.md: every CSV row must land
         # in the database. Previously the Capacity rows were dropped silently.
+        # Asserts on the importer's own imported/skipped counts rather than a
+        # handful of spot-checked fields, so a future category with no
+        # importer branch can't slip through unnoticed.
         run: |
           python - <<'PY'
           import csv, logging
@@ -45,12 +50,21 @@ jobs:
 
           Base.metadata.create_all(bind=engine)
           db = SessionLocal()
-          vehicle = import_csv_data(db, csv_path)
+          result = import_csv_data(db, csv_path)
 
-          # Every non-Basic, non-Feature row must have produced a non-null field.
+          assert result.total == expected, (
+              f"importer saw {result.total} rows, CSV has {expected}"
+          )
+          assert result.skipped == 0, f"{result.skipped} row(s) were skipped during import"
+          assert result.imported == expected, (
+              f"only {result.imported} of {expected} rows were imported"
+          )
+
+          # Spot-check the specific fields that previously went missing.
+          vehicle = result.vehicle
           assert vehicle.capacity.max_payload_kg is not None, "Capacity rows were dropped"
           assert vehicle.pricing.base_price is not None, "Pricing base_price missing"
           assert vehicle.battery.usable_capacity_kwh is not None, "Battery usable capacity missing"
           db.close()
-          print(f"OK: CSV has {expected} data rows and all key fields imported")
+          print(f"OK: {result.imported}/{expected} CSV rows imported, 0 skipped")
           PY

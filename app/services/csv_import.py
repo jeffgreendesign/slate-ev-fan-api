@@ -1,6 +1,8 @@
 import csv
 import logging
 from pathlib import Path
+from typing import NamedTuple
+
 from sqlalchemy.orm import Session
 from app.models.vehicle import (
     Vehicle, Dimensions, Performance, Powertrain,
@@ -8,6 +10,13 @@ from app.models.vehicle import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class ImportResult(NamedTuple):
+    vehicle: Vehicle
+    imported: int
+    skipped: int
+    total: int
 
 # Per-category maps of CSV "Specification" -> (target attribute, converter).
 # Adding a spec to the CSV only requires an entry here.
@@ -88,7 +97,9 @@ def import_csv_data(db: Session, csv_path: Path):
 
     Rows are processed individually: a malformed row is logged and skipped
     rather than aborting the import, so one bad value cannot silently
-    truncate everything after it.
+    truncate everything after it. Returns an ImportResult so callers can
+    verify completeness (e.g. assert skipped == 0) instead of trusting that
+    a returned vehicle implies every row landed.
     """
     with open(csv_path, 'r', encoding='utf-8', newline='') as file:
         rows = list(csv.DictReader(file))
@@ -133,6 +144,10 @@ def import_csv_data(db: Session, csv_path: Path):
 
         try:
             if category == 'Feature':
+                if not spec:
+                    logger.warning("Row %d: feature has no name, skipping", line_no)
+                    skipped += 1
+                    continue
                 is_optional = (row.get('Optional') or '').lower() == 'yes'
                 db.add(Feature(
                     vehicle_id=vehicle.id,
@@ -182,4 +197,4 @@ def import_csv_data(db: Session, csv_path: Path):
         "CSV import complete: %d rows imported, %d skipped, out of %d total",
         imported, skipped, len(rows),
     )
-    return vehicle
+    return ImportResult(vehicle=vehicle, imported=imported, skipped=skipped, total=len(rows))

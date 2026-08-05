@@ -105,7 +105,7 @@ check_pattern \
   "SQL string interpolation (f-string with SQL keywords)" \
   "f['\"].*\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER)\b" \
   "MEDIUM" \
-  ""
+  "ddl-identifiers-validated"
 
 check_pattern \
   "SQL string interpolation (% formatting with SQL keywords)" \
@@ -131,7 +131,7 @@ check_pattern \
   "Broad exception handling (bare except or Exception)" \
   "except\s*:|except\s+Exception\s*:" \
   "LOW" \
-  ""
+  "transactional-rollback-guard"
 
 check_pattern \
   "TODO/FIXME/HACK comments (potential incomplete work)" \

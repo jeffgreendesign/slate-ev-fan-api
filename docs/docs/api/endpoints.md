@@ -114,7 +114,7 @@ Selected response fields:
 ```json
 {
   "official_affiliation": false,
-  "last_reviewed": "2026-06-08",
+  "last_reviewed": "2026-08-02",
   "status": "preproduction",
   "disclaimer": "Unofficial fan API data compiled from public sources...",
   "primary_sources": [
@@ -124,8 +124,15 @@ Selected response fields:
     }
   ],
   "known_unknowns": [
-    "Final MSRP/base price",
-    "Final EPA-certified range and MPGe"
+    "Final EPA-certified range and MPGe",
+    "GAWR (per-axle weight ratings)"
+  ],
+  "recently_resolved": [
+    {
+      "item": "Final MSRP/base price",
+      "resolved_on": "2026-06-24",
+      "value": "$24,950 pickup / $29,950 SUV, excluding destination and fees"
+    }
   ]
 }
 ```
