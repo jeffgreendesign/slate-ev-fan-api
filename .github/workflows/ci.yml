@@ -51,6 +51,7 @@ jobs:
           Base.metadata.create_all(bind=engine)
           db = SessionLocal()
           result = import_csv_data(db, csv_path)
+          db.commit()  # import_csv_data() only flushes; the caller commits.
 
           assert result.total == expected, (
               f"importer saw {result.total} rows, CSV has {expected}"

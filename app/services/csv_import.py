@@ -100,6 +100,11 @@ def import_csv_data(db: Session, csv_path: Path):
     truncate everything after it. Returns an ImportResult so callers can
     verify completeness (e.g. assert skipped == 0) instead of trusting that
     a returned vehicle implies every row landed.
+
+    Does not commit. The caller decides the transaction boundary — e.g.
+    main.py's _sync_csv_data() commits this together with clearing old data
+    and recording the new CSV fingerprint, so a failure partway through
+    can't leave the database with new data but stale bookkeeping.
     """
     with open(csv_path, 'r', encoding='utf-8', newline='') as file:
         rows = list(csv.DictReader(file))
@@ -135,12 +140,16 @@ def import_csv_data(db: Session, csv_path: Path):
     skipped = 0
     for line_no, row in enumerate(rows, start=2):  # start=2 accounts for the header
         category = row.get('Category')
-        if category == 'Basic':
-            imported += 1
-            continue
-
         spec = row.get('Specification')
         value = row.get('Value')
+
+        if category == 'Basic':
+            if spec not in _BASIC_FIELDS:
+                logger.warning("Row %d: unknown Basic specification %r, skipping", line_no, spec)
+                skipped += 1
+            else:
+                imported += 1
+            continue
 
         try:
             if category == 'Feature':
@@ -192,7 +201,7 @@ def import_csv_data(db: Session, csv_path: Path):
             )
             skipped += 1
 
-    db.commit()
+    db.flush()
     logger.info(
         "CSV import complete: %d rows imported, %d skipped, out of %d total",
         imported, skipped, len(rows),
