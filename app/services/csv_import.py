@@ -194,7 +194,12 @@ def import_csv_data(db: Session, csv_path: Path):
             setattr(getattr(vehicle, target_attr), attr_name, converter(value))
             imported += 1
 
-        except (ValueError, TypeError, KeyError, AttributeError) as exc:
+        except (ValueError, TypeError) as exc:
+            # Only value-conversion failures land here (e.g. a non-numeric
+            # cell). KeyError/AttributeError would mean _SPEC_MAP,
+            # _CATEGORY_TARGET, or a vehicle relationship name is wrong —
+            # an internal bug, not bad CSV data — so those propagate
+            # instead of being silently counted as a skipped row.
             logger.warning(
                 "Row %d: could not import %s/%s (value=%r): %s",
                 line_no, category, spec, value, exc,

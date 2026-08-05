@@ -94,7 +94,15 @@ def _sync_csv_data(db) -> None:
                 db.query(model).delete()
             db.query(ImportMeta).delete()
 
-        import_csv_data(db, CSV_PATH)
+        result = import_csv_data(db, CSV_PATH)
+        if result.skipped:
+            # Don't record this fingerprint as successfully imported — a
+            # partial import must not be mistaken for the known-good state
+            # on the next startup. Raising rolls back the whole attempt.
+            raise ValueError(
+                f"CSV import incomplete: {result.skipped} of {result.total} "
+                f"row(s) skipped; see warnings above for details"
+            )
         db.add(ImportMeta(csv_sha256=fingerprint))
         db.commit()
     except Exception:  # transactional-rollback-guard: always re-raised, never swallowed
