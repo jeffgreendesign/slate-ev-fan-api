@@ -67,34 +67,43 @@ API documentation (Swagger UI) will be available at `http://localhost:8000/docs`
 
 ## API Endpoints
 
-### 1. Root Endpoint
+All data endpoints are served under the `/api/v1` base path.
+
+### 1. Service Descriptor
 
 - **URL**: `/`
+- **Method**: GET
+- **Description**: Service name, version, and pointers to the API base and docs
+- **Response**: Descriptor object
+
+### 2. Vehicle Information
+
+- **URL**: `/api/v1/`
 - **Method**: GET
 - **Description**: Get the main vehicle information
 - **Response**: Vehicle object with specifications and features
 
-### 2. Features List
+### 3. Features List
 
-- **URL**: `/features`
+- **URL**: `/api/v1/features`
 - **Method**: GET
 - **Description**: Get all features of the Slate EV truck
 - **Query Parameters**:
   - `category` (optional): Filter features by category (e.g., "Safety", "Technology", "Charging")
-- **Response**: Array of features
+- **Response**: Array of features (empty array when nothing matches)
 
-### 3. Specific Feature
+### 4. Specific Feature
 
-- **URL**: `/features/{feature_name}`
+- **URL**: `/api/v1/features/{feature_name}`
 - **Method**: GET
 - **Description**: Get details of a specific feature
 - **URL Parameters**:
   - `feature_name`: Name of the feature to retrieve
 - **Response**: Feature details
 
-### 4. Source Metadata
+### 5. Source Metadata
 
-- **URL**: `/sources`
+- **URL**: `/api/v1/sources`
 - **Method**: GET
 - **Description**: Get public source notes, caveats, and known unknowns for the current preproduction Slate data
 - **Response**: Source metadata object

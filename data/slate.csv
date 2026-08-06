@@ -2,7 +2,7 @@ Category,Specification,Value,Unit,Optional,Additional Info
 Basic,Model,Slate Truck,,,
 Basic,Manufacturer,Slate Auto,,,
 Basic,Vehicle Type,Preproduction electric pickup with SUV accessory conversion option,,,
-Basic,Production Start,Late 2026 target,,,
+Basic,Production Start,Q4 2026,,,First deliveries expected Q4 2026
 Basic,Assembly Location,"Warsaw, Indiana, USA",,,
 Dimensions,Length,4434.84,mm,,174.6 in
 Dimensions,Width,1793.24,mm,,70.6 in without mirrors
@@ -12,25 +12,26 @@ Dimensions,Bed Length,1524,mm,,60.0 in
 Performance,0-60 mph,8.0,seconds,,Estimated
 Performance,Top Speed,145,km/h,,90 mph
 Performance,Fuel Economy,96,MPGe,,Estimated combined MPGe; final EPA rating not available
-Powertrain,Motor Type,150 kW permanent-magnet synchronous motor,,,
+Powertrain,Motor Type,135 kW permanent-magnet synchronous motor,,,Single rear-mounted motor
 Powertrain,Drive Type,Rear-wheel drive,,,
-Powertrain,Power Output,201,hp,,
+Powertrain,Power Output,181,hp,,135 kW official spec
 Powertrain,Torque,264,Nm,,195 lb-ft
-Battery,Standard Capacity,52.7,kWh,,Projected/preproduction
-Battery,Optional Capacity,84.3,kWh,Yes,Accessory/extended pack; projected/preproduction
-Battery,Standard Range,241,km,,150 mi projected; not EPA rated
-Battery,Optional Range,386,km,Yes,240 mi projected; not EPA rated
+Battery,Standard Capacity,65,kWh,,Gross pack capacity; official spec 2026-06-24
+Battery,Usable Capacity,63,kWh,,Official usable energy
+Battery,Chemistry,LFP,,,Lithium iron phosphate
+Battery,Standard Range,330,km,,205 mi Slate-estimated; not EPA rated
 Charging,Port Type,NACS,,,
 Charging,Onboard Charger,11,kW,,
-Charging,Level 1 Time,11,hours,,20-100% official estimate
-Charging,Level 2 Time,5,hours,,20-100% under 5 hours official estimate
-Charging,DC Fast Charging Time,30,minutes,,20-80% under 30 minutes at up to 120 kW
-Capacity,Base Curb Weight,1634,kg,,3602 lb
-Capacity,Max Payload,650,kg,,1433 lb official spec; public copy may round to 1400 lb
-Capacity,Max Towing,454,kg,,1000 lb
+Charging,Level 1 Time,17,hours,,20-80% official estimate
+Charging,Level 2 Time,4,hours,,20-100% official estimate
+Charging,DC Fast Charging Time,30,minutes,,20-80% in 0.5 hr at up to 120 kW
+Capacity,Base Curb Weight,1836,kg,,4048 lb pickup; SUV 4335 lb
+Capacity,GVWR,2580,kg,,5689 lb
+Capacity,Max Payload,703,kg,,1550 lb pickup; SUV 1263 lb
+Capacity,Max Towing,907,kg,,2000 lb pickup; SUV 1824 lb
 Capacity,Frunk Volume,198,L,,7.0 cu ft
-Capacity,Bed Volume,1048,L,,37.0 cu ft
-Capacity,Cargo Space,963,L,,34.0 cu ft SUV cargo behind seats
+Capacity,Bed Volume,994,L,,35.1 cu ft
+Capacity,Cargo Space,963,L,,34.0 cu ft SUV cargo behind seats; not restated in 2026-06-24 release
 Feature,Factory Body,2-seat pickup,,,Body
 Feature,SUV Conversion Kit,Optional accessory kit for 5-seat SUV conversion,,Yes,Body
 Feature,Accessory Catalog,100+ accessories announced,,,Customization
@@ -42,4 +43,8 @@ Feature,Physical HVAC Controls,Standard physical HVAC knobs,,,Interior
 Feature,NACS Charging,Standard NACS charging port with Tesla Supercharger access,,,Charging
 Feature,Active Emergency Braking,Mentioned public safety feature; final ratings not available,,,Safety
 Feature,Forward Collision Warning,Mentioned public safety feature; final ratings not available,,,Safety
-Pricing,Reservation Deposit,50,USD,,Refundable reservation deposit
+Pricing,Base Price,24950,USD,,Pickup; excludes destination taxes title and registration. SUV starts at 29950
+Pricing,Federal Tax Credit,0,USD,,7500 federal credit eliminated effective 2025-09-30
+Pricing,Final Price,24950,USD,,Base price less federal tax credit; excludes destination and fees
+Pricing,Reservation Deposit,50,USD,,Legacy refundable reservation deposit
+Pricing,Preorder Deposit,300,USD,,Preorder deposit; 250 for existing reservation holders

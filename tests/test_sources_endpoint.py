@@ -20,8 +20,21 @@ def test_sources_endpoint_exposes_public_caveats():
     data = response.json()
     assert data["official_affiliation"] is False
     assert data["status"] == "preproduction"
-    assert "Final MSRP/base price" in data["known_unknowns"]
+    # Range is Slate-estimated, not EPA-certified, so it stays a known unknown
+    # even after the 2026-06-24 announcement resolved pricing and pack specs.
+    assert "Final EPA-certified range and MPGe" in data["known_unknowns"]
+    assert "Final MSRP/base price" not in data["known_unknowns"]
     assert any(source["url"] == "https://www.slate.auto/en/faq" for source in data["primary_sources"])
+
+
+def test_sources_endpoint_records_resolved_unknowns():
+    client = TestClient(app)
+
+    data = client.get("/api/v1/sources").json()
+
+    resolved = {entry["item"] for entry in data["recently_resolved"]}
+    assert "Final MSRP/base price" in resolved
+    assert "Battery usable capacity and chemistry" in resolved
 
 
 def test_load_sources_reports_missing_file(tmp_path, monkeypatch):

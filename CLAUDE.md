@@ -15,9 +15,9 @@ Slate EV Truck API — a FastAPI REST API serving specifications, features, and 
 | Aspect          | Value                               |
 |-----------------|-------------------------------------|
 | Language        | Python 3.11                         |
-| Framework       | FastAPI 0.104                       |
+| Framework       | FastAPI 0.141                       |
 | ORM             | SQLAlchemy 2.0                      |
-| Validation      | Pydantic 2.5                        |
+| Validation      | Pydantic 2.13                       |
 | Database        | SQLite (file-based)                 |
 | Package manager | pip                                 |
 | Test framework  | pytest                              |

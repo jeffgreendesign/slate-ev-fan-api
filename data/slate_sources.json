@@ -1,10 +1,10 @@
 {
-  "id": "slate-truck-public-specs-2026-06-08",
+  "id": "slate-truck-public-specs-2026-08-02",
   "vehicle_id": "slate-truck",
   "official_affiliation": false,
-  "last_reviewed": "2026-06-08",
+  "last_reviewed": "2026-08-02",
   "status": "preproduction",
-  "disclaimer": "Unofficial fan API data compiled from public sources. Slate Truck specifications, pricing, range, production timing, and availability are preproduction/projected and subject to change. Projected range is not final EPA-rated range.",
+  "disclaimer": "Unofficial fan API data compiled from public sources. Pricing and specifications reflect Slate's 2026-06-24 preorder announcement. The vehicle remains preproduction and specifications are subject to change. The 205-mile range figure is Slate-estimated and is not a final EPA rating.",
   "primary_sources": [
     {
       "label": "Slate Auto FAQ",
@@ -30,17 +30,43 @@
       "label": "NHTSA vPIC manufacturer details",
       "url": "https://vpic.nhtsa.dot.gov/api/vehicles/getmanufacturerdetails/Slate?format=json",
       "use": "Structured manufacturer record for SLATE AUTO LLC and vehicle types"
+    },
+    {
+      "label": "Slate Auto preorder announcement (2026-06-24)",
+      "url": "https://www.prnewswire.com/news-releases/back-to-basics-made-to-be-accessorized-over-time-the-24-950-slate-truck-is-the-most-affordable-truck-in-america-302808453.html",
+      "use": "Official pricing, 65/63 kWh LFP pack, 205 mi estimated range, 181 hp/135 kW, payload, towing, GVWR, curb weight, charging times, warranty and Q4 2026 delivery timing"
     }
   ],
   "known_unknowns": [
-    "Final MSRP/base price",
     "Final EPA-certified range and MPGe",
-    "Battery usable capacity and chemistry",
-    "GVWR/GAWR",
+    "GAWR (per-axle weight ratings)",
     "Final crash-test ratings",
-    "Warranty terms",
-    "Accessory/SUV kit pricing",
+    "Warranty terms beyond the 10-year/110,000-mile battery and powertrain coverage",
+    "Individual accessory pricing",
+    "Destination and documentation charges",
     "Final trim names and production configuration differences"
+  ],
+  "recently_resolved": [
+    {
+      "item": "Final MSRP/base price",
+      "resolved_on": "2026-06-24",
+      "value": "$24,950 pickup / $29,950 SUV, excluding destination and fees"
+    },
+    {
+      "item": "Battery usable capacity and chemistry",
+      "resolved_on": "2026-06-24",
+      "value": "65 kWh gross / 63 kWh usable, LFP"
+    },
+    {
+      "item": "GVWR",
+      "resolved_on": "2026-06-24",
+      "value": "5,689 lb (2,580 kg)"
+    },
+    {
+      "item": "Federal tax credit eligibility",
+      "resolved_on": "2025-09-30",
+      "value": "$7,500 federal credit eliminated; recorded as 0"
+    }
   ],
   "field_confidence_policy": {
     "high": "Official Slate page/PDF or NHTSA structured record",
